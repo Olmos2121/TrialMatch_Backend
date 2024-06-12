@@ -21,4 +21,6 @@ public class ClinicalTrial {
     private User laboratory;
     @ManyToMany
     private Set<User> participants;
+    @ManyToMany
+    private Set<User> candidates;
 }

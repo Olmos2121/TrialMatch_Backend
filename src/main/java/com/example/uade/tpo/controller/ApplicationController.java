@@ -34,7 +34,7 @@ public class ApplicationController {
             return ResponseEntity.badRequest().body(new MessageResponse("User already applied to this trial!"));
         }
 
-        trial.getParticipants().add(user);
+        trial.getCandidates().add(user);
         clinicalTrialRepository.save(trial);
 
         return ResponseEntity.ok(new MessageResponse("Applied successfully!"));
