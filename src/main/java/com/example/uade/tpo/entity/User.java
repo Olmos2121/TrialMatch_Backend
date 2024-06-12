@@ -1,5 +1,6 @@
 package com.example.uade.tpo.entity;
 
+import com.example.uade.tpo.entity.enumeration.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,15 +9,20 @@ import lombok.Data;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String name;
-    @Column
-    private String lastName;
-    @Column
-    private String email;
+    private String username;
     @Column
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
