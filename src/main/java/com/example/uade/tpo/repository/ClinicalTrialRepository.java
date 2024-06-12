@@ -4,6 +4,9 @@ import com.example.uade.tpo.entity.ClinicalTrial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClinicalTrialRepository extends JpaRepository<ClinicalTrial, Long> {
+    List<ClinicalTrial> findByTitleContainingOrDescriptionContaining(String title, String description);
 }

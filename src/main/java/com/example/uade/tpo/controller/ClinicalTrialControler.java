@@ -33,6 +33,11 @@ public class ClinicalTrialControler {
                 new OpenApiResourceNotFoundException("Trial not found"));
     }
 
+    @GetMapping("/search")
+    public List<ClinicalTrial> searchTrials(@RequestParam String query) {
+        return clinicalTrialRepository.findByTitleContainingOrDescriptionContaining(query, query);
+    }
+
     @PutMapping("/{id}")
     public ClinicalTrial updateTrial(@PathVariable Long id, @RequestBody ClinicalTrial clinicalTrial) {
         ClinicalTrial trial = clinicalTrialRepository.findById(id).orElseThrow(() ->
