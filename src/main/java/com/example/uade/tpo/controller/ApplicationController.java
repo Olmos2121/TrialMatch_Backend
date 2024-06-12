@@ -30,6 +30,10 @@ public class ApplicationController {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("User not found"));
 
+        if (trial.getParticipants().contains(user)) {
+            return ResponseEntity.badRequest().body(new MessageResponse("User already applied to this trial!"));
+        }
+
         trial.getParticipants().add(user);
         clinicalTrialRepository.save(trial);
 
