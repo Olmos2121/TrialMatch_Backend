@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClinicalTrialRepository extends JpaRepository<ClinicalTrial, Long> {
+public interface IClinicalTrialRepository extends JpaRepository<ClinicalTrial, Long> {
     List<ClinicalTrial> findByTitleContainingOrDescriptionContaining(String title, String description);
 }

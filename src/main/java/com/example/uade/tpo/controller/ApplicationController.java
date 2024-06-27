@@ -3,8 +3,8 @@ package com.example.uade.tpo.controller;
 import com.example.uade.tpo.dtos.response.MessageResponse;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.User;
-import com.example.uade.tpo.repository.ClinicalTrialRepository;
-import com.example.uade.tpo.repository.UserRepository;
+import com.example.uade.tpo.repository.IClinicalTrialRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicationController {
 
     @Autowired
-    private ClinicalTrialRepository clinicalTrialRepository;
+    private IClinicalTrialRepository IClinicalTrialRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository IUserRepository;
 
     @PostMapping("/{trialId}/apply/{userId}")
     public ResponseEntity<?> applyToTrial(@PathVariable Long trialId, @PathVariable Long userId) {
-        ClinicalTrial trial = clinicalTrialRepository.findById(trialId).orElseThrow(() ->
+        ClinicalTrial trial = IClinicalTrialRepository.findById(trialId).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("Trial not found"));
-        User user = userRepository.findById(userId).orElseThrow(() ->
+        User user = IUserRepository.findById(userId).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("User not found"));
 
         if (trial.getParticipants().contains(user)) {
@@ -35,7 +35,7 @@ public class ApplicationController {
         }
 
         trial.getCandidates().add(user);
-        clinicalTrialRepository.save(trial);
+        IClinicalTrialRepository.save(trial);
 
         return ResponseEntity.ok(new MessageResponse("Applied successfully!"));
     }

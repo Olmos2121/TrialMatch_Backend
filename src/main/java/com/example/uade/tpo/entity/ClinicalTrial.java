@@ -11,10 +11,14 @@ import java.util.Set;
 public class ClinicalTrial {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliniTri_seq")
+    @SequenceGenerator(name = "cliniTri_seq", sequenceName = "cliniTri_seq", allocationSize = 1)
     private Long id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private String status;
     @ManyToOne
     @JoinColumn(name = "laboratory_id")

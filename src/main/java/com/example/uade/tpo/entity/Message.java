@@ -8,7 +8,8 @@ import lombok.Data;
 @Table(name = "messages")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messages_seq")
+    @SequenceGenerator(name = "messages_seq", sequenceName = "messages_seq", allocationSize = 1)
     private Long id;
     private String content;
     @ManyToOne

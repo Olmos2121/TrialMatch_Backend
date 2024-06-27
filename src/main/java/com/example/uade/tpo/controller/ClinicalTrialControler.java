@@ -3,8 +3,8 @@ package com.example.uade.tpo.controller;
 import com.example.uade.tpo.dtos.response.MessageResponse;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.User;
-import com.example.uade.tpo.repository.ClinicalTrialRepository;
-import com.example.uade.tpo.repository.UserRepository;
+import com.example.uade.tpo.repository.IClinicalTrialRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import com.example.uade.tpo.service.NotificationService;
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,35 +19,35 @@ import java.util.List;
 public class ClinicalTrialControler {
 
     @Autowired
-    private ClinicalTrialRepository clinicalTrialRepository;
+    private IClinicalTrialRepository IClinicalTrialRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository IUserRepository;
 
     @Autowired
     private NotificationService notificationService;
 
     @PostMapping
     public ClinicalTrial createTrial(@RequestBody ClinicalTrial clinicalTrial) {
-        return clinicalTrialRepository.save(clinicalTrial);
+        return IClinicalTrialRepository.save(clinicalTrial);
     }
 
     @GetMapping
     public List<ClinicalTrial> getAllTrials() {
-        return clinicalTrialRepository.findAll();
+        return IClinicalTrialRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ClinicalTrial getTrialById(@PathVariable Long id) {
-        return clinicalTrialRepository.findById(id).orElseThrow(() ->
+        return IClinicalTrialRepository.findById(id).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("Trial not found"));
     }
 
     @PostMapping("/{trialId}/accept/{userId}")
     public ResponseEntity<?> acceptApplication(@PathVariable Long trialId, @PathVariable Long userId) {
-        ClinicalTrial trial = clinicalTrialRepository.findById(trialId).orElseThrow(() ->
+        ClinicalTrial trial = IClinicalTrialRepository.findById(trialId).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("Trial not found"));
-        User user = userRepository.findById(userId).orElseThrow(() ->
+        User user = IUserRepository.findById(userId).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("User not found"));
 
         if (!trial.getCandidates().contains(user)) {
@@ -55,35 +55,35 @@ public class ClinicalTrialControler {
         }
 
         trial.getParticipants().add(user);
-        clinicalTrialRepository.save(trial);
+        IClinicalTrialRepository.save(trial);
 
-        //notificationService.sendAcceptanceNotification(user, trial);
+        notificationService.sendAcceptanceNotification(user, trial);
 
         return ResponseEntity.ok(new MessageResponse("Application accepted successfully!"));
     }
 
     @GetMapping("/search")
     public List<ClinicalTrial> searchTrials(@RequestParam String query) {
-        return clinicalTrialRepository.findByTitleContainingOrDescriptionContaining(query, query);
+        return IClinicalTrialRepository.findByTitleContainingOrDescriptionContaining(query, query);
     }
 
     @PutMapping("/{id}")
     public ClinicalTrial updateTrial(@PathVariable Long id, @RequestBody ClinicalTrial clinicalTrial) {
-        ClinicalTrial trial = clinicalTrialRepository.findById(id).orElseThrow(() ->
+        ClinicalTrial trial = IClinicalTrialRepository.findById(id).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("Trial not found"));
         trial.setTitle(clinicalTrial.getTitle());
         trial.setDescription(clinicalTrial.getDescription());
         trial.setStatus(clinicalTrial.getStatus());
 
-        return clinicalTrialRepository.save(trial);
+        return IClinicalTrialRepository.save(trial);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTrial(@PathVariable Long id) {
-        clinicalTrialRepository.findById(id).orElseThrow(() ->
+        IClinicalTrialRepository.findById(id).orElseThrow(() ->
                 new OpenApiResourceNotFoundException("Trial not found"));
 
-        clinicalTrialRepository.deleteById(id);
+        IClinicalTrialRepository.deleteById(id);
 
         return ResponseEntity.ok().build();
     }
