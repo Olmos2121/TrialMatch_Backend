@@ -5,6 +5,7 @@ import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IClinicalTrialRepository;
 import com.example.uade.tpo.repository.IUserRepository;
+import com.example.uade.tpo.service.ApplicationService;
 import org.springdoc.api.OpenApiResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicationController {
 
     @Autowired
-    private IClinicalTrialRepository IClinicalTrialRepository;
+    private ApplicationService applicationService;
 
-    @Autowired
-    private IUserRepository IUserRepository;
-
-    @PostMapping("/{trialId}/apply/{userId}")
-    public ResponseEntity<?> applyToTrial(@PathVariable Long trialId, @PathVariable Long userId) {
-        ClinicalTrial trial = IClinicalTrialRepository.findById(trialId).orElseThrow(() ->
-                new OpenApiResourceNotFoundException("Trial not found"));
-        User user = IUserRepository.findById(userId).orElseThrow(() ->
-                new OpenApiResourceNotFoundException("User not found"));
-
-        if (trial.getParticipants().contains(user)) {
-            return ResponseEntity.badRequest().body(new MessageResponse("User already applied to this trial!"));
+    @PostMapping("/{trialId}/apply/{userEmail}")
+    public ResponseEntity<?> applyToTrial(@PathVariable Long trialId, @PathVariable String userEmail) {
+        try {
+            applicationService.applyToTrial(trialId, userEmail);
+            return ResponseEntity.ok(new MessageResponse("Applied to trial successfully!"));
+        } catch (OpenApiResourceNotFoundException e) {
+            return ResponseEntity.status(404).body(new MessageResponse("Resource not found"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Internal server error"));
         }
-
-        trial.getCandidates().add(user);
-        IClinicalTrialRepository.save(trial);
-
-        return ResponseEntity.ok(new MessageResponse("Applied successfully!"));
     }
 }

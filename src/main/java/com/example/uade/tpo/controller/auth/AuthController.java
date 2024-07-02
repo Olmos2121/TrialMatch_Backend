@@ -23,9 +23,18 @@ public class AuthController {
         return ResponseEntity.ok(service.register(request));
     }
 
+    @PostMapping("/register/investigator")
+    public ResponseEntity<AuthenticationResponse> registerLaboratory(@Valid @RequestBody RegisterLabRequest request) {
+        return ResponseEntity.ok(service.registerLaboratory(request));
+    }
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
+    @PostMapping("/authenticate/investigator")
+    public ResponseEntity<AuthenticationResponse> authenticateInvestigator(@Valid @RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(service.authenticateInvestigator(request));
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.uade.tpo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -15,16 +17,33 @@ public class ClinicalTrial {
     @SequenceGenerator(name = "cliniTri_seq", sequenceName = "cliniTri_seq", allocationSize = 1)
     private Long id;
     @Column(nullable = false)
-    private String title;
+    private String name;
     @Column(nullable = false)
-    private String description;
+    private String enfermedad;
     @Column(nullable = false)
-    private String status;
-    @ManyToOne
-    @JoinColumn(name = "laboratory_id")
-    private User laboratory;
+    private String estado;
+    @Column(nullable = false)
+    private String investigador;
+    @Column(nullable = false)
+    private String provincia;
+    @Column (nullable = false)
+    private String fase;
+    @Column(nullable = false)
+    private String genero;
+    @Column (nullable = false)
+    private String candidatosSanos;
+    @Column(nullable = false)
+    private int rangoEtarioMax;
+    @Column (nullable = false)
+    private int rangoEtarioMin;
+    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaInicio;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    private LocalDate fechaFin;
     @ManyToMany
-    private Set<User> participants;
+    private Set<User> participantes;
     @ManyToMany
-    private Set<User> candidates;
+    private Set<User> candidatos;
 }

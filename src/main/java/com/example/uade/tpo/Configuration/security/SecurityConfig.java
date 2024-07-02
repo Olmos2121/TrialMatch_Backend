@@ -36,9 +36,14 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html",
                                 "/v3/api-docs/swagger-config",
                                 "/api/application/**",
-                                "/api/trials/**",
+                                "/api/trials/{id}",
+                                "/api/trials",
                                 "/api/message/**"
                         ).permitAll()
+                        .requestMatchers(
+                                "/api/trials/create",
+                                "/api/investigator/me"
+                        ).hasRole("INVESTIGATOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(exc -> exc
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())

@@ -6,6 +6,8 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import com.example.uade.tpo.entity.Investigator;
+import com.example.uade.tpo.entity.User;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -23,14 +25,23 @@ public class JwtService {
     private long jwtExpiration;
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(userDetails, jwtExpiration);
+        if( userDetails instanceof User) {
+            User user = (User) userDetails;
+            return buildToken(user.getUsername(), user.getRole().name(), jwtExpiration);
+        } else if (userDetails instanceof Investigator) {
+            Investigator investigator = (Investigator) userDetails;
+            return buildToken(investigator.getUsername(), investigator.getRole().name(), jwtExpiration);
+        } else {
+            throw  new IllegalArgumentException("UserDetails must be an instance of User or Investigator");
+        }
     }
 
-    private String buildToken(UserDetails userDetails, long expiration) {
+    private String buildToken(String username, String role, long expiration) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .setSubject(username)
+                .claim("role", role)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
     }
