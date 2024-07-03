@@ -1,8 +1,10 @@
 package com.example.uade.tpo.service;
 
+import com.example.uade.tpo.dtos.request.EditTrialRequestDto;
 import com.example.uade.tpo.dtos.request.SearchTrialRequestDto;
 import com.example.uade.tpo.dtos.request.TrialRequestDto;
 import com.example.uade.tpo.dtos.response.ClinicalTrialResponseDto;
+import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.Investigator;
 import com.example.uade.tpo.entity.User;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -68,5 +71,107 @@ public class ClinicalTrialService {
             return null;
         }
         return Mapper.convertClinicalTrialResponseDto(clinicalTrial);
+    }
+
+    public List<ClinicalTrialResponseDto> getTrialsByEmail(String email) {
+        Optional<UserDetails> investigator = investigatorRepository.findByEmail(email);
+        if (investigator.isEmpty()) {
+            return null;
+        }
+        Investigator inv = (Investigator) investigator.get();
+        List<ClinicalTrial> clinicalTrials = clinicalTrialRepository.findByInvestigador(inv.getCompanyName());
+        List<ClinicalTrialResponseDto> clinicalTrialResponseDtos = new ArrayList<>();
+        for (ClinicalTrial clinicalTrial : clinicalTrials) {
+            clinicalTrialResponseDtos.add(Mapper.convertClinicalTrialResponseDto(clinicalTrial));
+        }
+        return clinicalTrialResponseDtos;
+    }
+
+    public Boolean deleteTrial(Long id) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return false;
+        }
+        clinicalTrialRepository.delete(clinicalTrial);
+        return true;
+    }
+
+    public ClinicalTrialResponseDto editTrial(Long id, EditTrialRequestDto editTrialRequestDto) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return null;
+        }
+        clinicalTrial.setEstado(editTrialRequestDto.getStatus());
+        clinicalTrial.setFase(editTrialRequestDto.getFase());
+        clinicalTrialRepository.save(clinicalTrial);
+        return Mapper.convertClinicalTrialResponseDto(clinicalTrial);
+    }
+
+    public List<UserResponseDto> getCandidates(Long id) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return null;
+        }
+        Set<User> candidatos = clinicalTrial.getCandidatos();
+        List<UserResponseDto> clinicalTrialResponseDtos = new ArrayList<>();
+        for (User candidato : candidatos) {
+            clinicalTrialResponseDtos.add(Mapper.convertUserResponseDto(candidato));
+        }
+        return clinicalTrialResponseDtos;
+    }
+
+    public Boolean acceptApply(Long id, String email) {
+        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return false;
+        }
+
+        User candidato = (User) user.get();
+
+        clinicalTrial.getParticipantes().add(candidato);
+        clinicalTrialRepository.save(clinicalTrial);
+        return true;
+    }
+
+    public Boolean rejectApply(Long id, String email) {
+        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return false;
+        }
+
+        User candidato = (User) user.get();
+
+        clinicalTrial.getCandidatos().remove(candidato);
+        clinicalTrialRepository.save(clinicalTrial);
+        return true;
+    }
+
+    public List<UserResponseDto> getParticipants(Long id) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return null;
+        }
+        Set<User> participantes = clinicalTrial.getParticipantes();
+        List<UserResponseDto> clinicalTrialResponseDtos = new ArrayList<>();
+        for (User participante : participantes) {
+            clinicalTrialResponseDtos.add(Mapper.convertUserResponseDto(participante));
+        }
+        return clinicalTrialResponseDtos;
+    }
+
+    public Boolean removeParticipant(Long id, String email) {
+        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        if (clinicalTrial == null) {
+            return false;
+        }
+
+        User participante = (User) user.get();
+
+        clinicalTrial.getParticipantes().remove(participante);
+        clinicalTrialRepository.save(clinicalTrial);
+        return true;
     }
 }

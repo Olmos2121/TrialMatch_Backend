@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IClinicalTrialRepository extends JpaRepository<ClinicalTrial, Long> {
+    List<ClinicalTrial> findByInvestigador(String companyName);
 }
