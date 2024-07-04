@@ -16,6 +16,7 @@ public class TrialRequestDto {
     String name;
     String enfermedad;
     String provincia;
+    String descripcion;
     String status;
     String fase;
     String genero;

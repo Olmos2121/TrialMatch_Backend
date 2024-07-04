@@ -21,12 +21,13 @@ public class Mapper {
         clinicalTrialResponseDto.setId(clinicalTrial.getId());
         clinicalTrialResponseDto.setInvestigador(clinicalTrial.getInvestigador());
         clinicalTrialResponseDto.setNombre(clinicalTrial.getName());
+        clinicalTrialResponseDto.setDescripcion(clinicalTrial.getDescripcion());
         clinicalTrialResponseDto.setProvincia(clinicalTrial.getProvincia());
         clinicalTrialResponseDto.setEnfermedad(clinicalTrial.getEnfermedad());
         clinicalTrialResponseDto.setEstado(clinicalTrial.getEstado());
         clinicalTrialResponseDto.setGenero(clinicalTrial.getGenero());
         clinicalTrialResponseDto.setRangoEtarioMin(clinicalTrial.getRangoEtarioMin());
-        clinicalTrialResponseDto.setRangoEtaioMax(clinicalTrial.getRangoEtarioMax());
+        clinicalTrialResponseDto.setRangoEtarioMax(clinicalTrial.getRangoEtarioMax());
         clinicalTrialResponseDto.setFechaInicio(clinicalTrial.getFechaInicio());
         clinicalTrialResponseDto.setFechaFin(clinicalTrial.getFechaFin());
         clinicalTrialResponseDto.setCandidatosSanos(clinicalTrial.getCandidatosSanos());

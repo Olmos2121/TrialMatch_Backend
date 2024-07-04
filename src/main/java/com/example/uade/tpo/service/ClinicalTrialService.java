@@ -45,6 +45,7 @@ public class ClinicalTrialService {
         clinicalTrial.setName(trial.getName());
         clinicalTrial.setInvestigador(investigator.getCompanyName());
         clinicalTrial.setProvincia(trial.getProvincia());
+        clinicalTrial.setDescripcion(trial.getDescripcion());
         clinicalTrial.setEnfermedad(trial.getEnfermedad());
         clinicalTrial.setEstado(trial.getStatus());
         clinicalTrial.setGenero(trial.getGenero());
@@ -113,11 +114,11 @@ public class ClinicalTrialService {
             return null;
         }
         Set<User> candidatos = clinicalTrial.getCandidatos();
-        List<UserResponseDto> clinicalTrialResponseDtos = new ArrayList<>();
+        List<UserResponseDto> UserResponseDtos = new ArrayList<>();
         for (User candidato : candidatos) {
-            clinicalTrialResponseDtos.add(Mapper.convertUserResponseDto(candidato));
+            UserResponseDtos.add(Mapper.convertUserResponseDto(candidato));
         }
-        return clinicalTrialResponseDtos;
+        return UserResponseDtos;
     }
 
     public Boolean acceptApply(Long id, String email) {

@@ -18,9 +18,10 @@ public class ClinicalTrialResponseDto {
     String investigador;
     String provincia;
     String enfermedad;
+    String descripcion;
     String estado;
     String genero;
-    int rangoEtaioMax;
+    int rangoEtarioMax;
     int rangoEtarioMin;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate fechaInicio;
