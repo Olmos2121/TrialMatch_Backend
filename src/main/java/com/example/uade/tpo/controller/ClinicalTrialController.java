@@ -74,11 +74,10 @@ public class ClinicalTrialController {
         }
     }
 
-    @PutMapping("/editTrial/{id}")
-    public ResponseEntity<ClinicalTrialResponseDto> editTrial(@PathVariable Long id,
-                                                              @RequestBody EditTrialRequestDto trialRequestDto) {
+    @PutMapping("/editTrial")
+    public ResponseEntity<ClinicalTrialResponseDto> editTrial(@RequestBody EditTrialRequestDto trialRequestDto) {
         try {
-            ClinicalTrialResponseDto clinicalTrialResponseDto = clinicalTrialService.editTrial(id, trialRequestDto);
+            ClinicalTrialResponseDto clinicalTrialResponseDto = clinicalTrialService.editTrial(trialRequestDto);
             return ResponseEntity.ok(clinicalTrialResponseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

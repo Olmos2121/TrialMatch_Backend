@@ -97,8 +97,8 @@ public class ClinicalTrialService {
         return true;
     }
 
-    public ClinicalTrialResponseDto editTrial(Long id, EditTrialRequestDto editTrialRequestDto) {
-        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+    public ClinicalTrialResponseDto editTrial(EditTrialRequestDto editTrialRequestDto) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(editTrialRequestDto.getId()).orElse(null);
         if (clinicalTrial == null) {
             return null;
         }
