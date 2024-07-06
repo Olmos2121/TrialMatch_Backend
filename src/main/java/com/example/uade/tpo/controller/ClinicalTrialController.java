@@ -5,6 +5,7 @@ import com.example.uade.tpo.dtos.request.EditTrialRequestDto;
 import com.example.uade.tpo.dtos.request.SearchTrialRequestDto;
 import com.example.uade.tpo.dtos.request.TrialRequestDto;
 import com.example.uade.tpo.dtos.response.ClinicalTrialResponseDto;
+import com.example.uade.tpo.dtos.response.PostulateResponseDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.service.ClinicalTrialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,11 @@ public class ClinicalTrialController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClinicalTrialResponseDto> getTrial(@PathVariable Long id) {
+    @GetMapping("/{id}/{email}")
+    public ResponseEntity<PostulateResponseDto> getTrial(@PathVariable Long id, @PathVariable String email) {
         try {
-            ClinicalTrialResponseDto clinicalTrialResponseDto = clinicalTrialService.getTrial(id);
-            return ResponseEntity.ok(clinicalTrialResponseDto);
+            PostulateResponseDto postulateResponseDto = clinicalTrialService.getTrial(id,email);
+            return ResponseEntity.ok(postulateResponseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -32,6 +32,8 @@ public class User implements UserDetails {
     private String email;
     @Column (nullable = false)
     private String password;
+    @Column (unique = true)
+    private Long UserPostulationInfoId;
     @Enumerated(EnumType.STRING)
     private Role role;
 

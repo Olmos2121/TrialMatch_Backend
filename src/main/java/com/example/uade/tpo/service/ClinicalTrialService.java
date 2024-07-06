@@ -4,6 +4,7 @@ import com.example.uade.tpo.dtos.request.EditTrialRequestDto;
 import com.example.uade.tpo.dtos.request.SearchTrialRequestDto;
 import com.example.uade.tpo.dtos.request.TrialRequestDto;
 import com.example.uade.tpo.dtos.response.ClinicalTrialResponseDto;
+import com.example.uade.tpo.dtos.response.PostulateResponseDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.Investigator;
@@ -63,12 +64,23 @@ public class ClinicalTrialService {
         return (Investigator) investigator.get();
     }
 
-    public ClinicalTrialResponseDto getTrial(Long id) {
+    public PostulateResponseDto getTrial(Long id, String email) {
         ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+        Optional<UserDetails> user = userRepository.findByEmail(email);
         if (clinicalTrial == null) {
             return null;
         }
-        return Mapper.convertClinicalTrialResponseDto(clinicalTrial);
+        if (user.isEmpty()){
+            return null;
+        }
+
+        User postulante = (User) user.get();
+
+        if(clinicalTrial.getCandidatos().contains(postulante) || clinicalTrial.getParticipantes().contains(postulante)){
+            return new PostulateResponseDto(Mapper.convertClinicalTrialResponseDto(clinicalTrial), true);
+        } else {
+            return new PostulateResponseDto(Mapper.convertClinicalTrialResponseDto(clinicalTrial), false);
+        }
     }
 
     public List<ClinicalTrialResponseDto> getTrialsByEmail(String email) {
