@@ -10,17 +10,12 @@ import com.example.uade.tpo.entity.Investigator;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IClinicalTrialRepository;
 import com.example.uade.tpo.repository.IInvestigatorRepository;
+import com.example.uade.tpo.repository.IUserRepository;
 import com.example.uade.tpo.utils.Mapper;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -29,6 +24,8 @@ public class ClinicalTrialService {
     private IClinicalTrialRepository clinicalTrialRepository;
     @Autowired
     private IInvestigatorRepository investigatorRepository;
+    @Autowired
+    private IUserRepository userRepository;
 
     public List<ClinicalTrialResponseDto> getAllTrials() {
         List<ClinicalTrial> clinicalTrials = clinicalTrialRepository.findAll();
@@ -121,30 +118,33 @@ public class ClinicalTrialService {
         return UserResponseDtos;
     }
 
-    public Boolean acceptApply(Long id, String email) {
-        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
-        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+    public Boolean acceptApply(Long trialId, Long userId) {
+        Optional<User> candidato = userRepository.findById(userId);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(trialId).orElse(null);
         if (clinicalTrial == null) {
             return false;
         }
+        if(candidato.isEmpty()){
+            return false;
+        }
+        clinicalTrial.getCandidatos().remove(candidato.get());
+        clinicalTrial.getParticipantes().add(candidato.get());
 
-        User candidato = (User) user.get();
-
-        clinicalTrial.getParticipantes().add(candidato);
         clinicalTrialRepository.save(clinicalTrial);
         return true;
     }
 
-    public Boolean rejectApply(Long id, String email) {
-        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
-        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+    public Boolean rejectApply(Long trialId, Long userId) {
+        Optional<User> candidato = userRepository.findById(userId);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(trialId).orElse(null);
         if (clinicalTrial == null) {
             return false;
         }
+        if(candidato.isEmpty()){
+            return false;
+        }
+        clinicalTrial.getCandidatos().remove(candidato.get());
 
-        User candidato = (User) user.get();
-
-        clinicalTrial.getCandidatos().remove(candidato);
         clinicalTrialRepository.save(clinicalTrial);
         return true;
     }
@@ -162,16 +162,17 @@ public class ClinicalTrialService {
         return clinicalTrialResponseDtos;
     }
 
-    public Boolean removeParticipant(Long id, String email) {
-        Optional<UserDetails> user = investigatorRepository.findByEmail(email);
-        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(id).orElse(null);
+    public Boolean removeParticipant(Long trialId, Long userId) {
+        Optional<User> participante = userRepository.findById(userId);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(trialId).orElse(null);
         if (clinicalTrial == null) {
             return false;
         }
+        if(participante.isEmpty()){
+            return false;
+        }
+        clinicalTrial.getParticipantes().remove(participante.get());
 
-        User participante = (User) user.get();
-
-        clinicalTrial.getParticipantes().remove(participante);
         clinicalTrialRepository.save(clinicalTrial);
         return true;
     }

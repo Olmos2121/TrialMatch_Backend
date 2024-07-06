@@ -1,5 +1,6 @@
 package com.example.uade.tpo.service;
 
+import com.example.uade.tpo.dtos.request.MessageRequestDto;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.User;
 import com.example.uade.tpo.repository.IClinicalTrialRepository;
@@ -36,5 +37,49 @@ public class NotificationService {
                 + "Equipo de TrialMatch";
 
         emailService.sendSimpleMessage(user.getEmail(), subject, text);
+    }
+
+    public void sendMessage(Long trialId, Long userId, MessageRequestDto message) {
+        Optional<User> user = userRepository.findById(userId);
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(trialId).orElse(null);
+        if (clinicalTrial == null) {
+            throw new OpenApiResourceNotFoundException("Clinical trial not found");
+        }
+        if(user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+        if(message.getMessage().isEmpty()){
+            throw new RuntimeException("Message cannot be empty");
+        }
+        String subject = "Mensaje de " + clinicalTrial.getInvestigador() + " - " + clinicalTrial.getName();
+
+        String text = "Estimado " + user.get().getUsername() + ",\n\n"
+                + "El investigador " + clinicalTrial.getInvestigador() + " ha enviado un mensaje para usted.\n\n"
+                + message.getMessage() + "\n\n"
+                + "Saludos,\n"
+                + "Equipo de TrialMatch";
+
+        emailService.sendSimpleMessage(user.get().getEmail(), subject, text);
+    }
+
+    public void sendMessageToAll(Long trialId, MessageRequestDto message) {
+        ClinicalTrial clinicalTrial = clinicalTrialRepository.findById(trialId).orElse(null);
+        if (clinicalTrial == null) {
+            throw new OpenApiResourceNotFoundException("Clinical trial not found");
+        }
+        if(message.getMessage().isEmpty()){
+            throw new RuntimeException("Message cannot be empty");
+        }
+        String subject = "Mensaje de " + clinicalTrial.getInvestigador() + " - " + clinicalTrial.getName();
+
+        String text = "Estimado participante,\n\n"
+                + "El investigador " + clinicalTrial.getInvestigador() + " ha enviado un mensaje para usted.\n\n"
+                + message.getMessage() + "\n\n"
+                + "Saludos,\n"
+                + "Equipo de TrialMatch";
+
+        for (User user : clinicalTrial.getParticipantes()) {
+            emailService.sendSimpleMessage(user.getEmail(), subject, text);
+        }
     }
 }

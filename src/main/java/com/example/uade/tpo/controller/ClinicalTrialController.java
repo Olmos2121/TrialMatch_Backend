@@ -94,30 +94,30 @@ public class ClinicalTrialController {
         }
     }
 
-    @PostMapping("/acceptApply/{id}/{email}")
-    public ResponseEntity<Boolean> acceptApply(@PathVariable Long id, @PathVariable String email) {
+    @PostMapping("/acceptApply/{trialId}/{userId}")
+    public ResponseEntity<Boolean> acceptApply(@PathVariable Long trialId, @PathVariable Long userId) {
         try {
-            Boolean added = clinicalTrialService.acceptApply(id, email);
+            Boolean added = clinicalTrialService.acceptApply(trialId, userId);
             return ResponseEntity.ok(added);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PostMapping("/rejectApply/{id}/{email}")
-    public ResponseEntity<Boolean> rejectApply(@PathVariable Long id, @PathVariable String email) {
+    @PostMapping("/rejectApply/{trialId}/{userId}")
+    public ResponseEntity<Boolean> rejectApply(@PathVariable Long trialId, @PathVariable Long userId) {
         try {
-            Boolean rejected = clinicalTrialService.rejectApply(id, email);
+            Boolean rejected = clinicalTrialService.rejectApply(trialId, userId);
             return ResponseEntity.ok(rejected);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @DeleteMapping("/removeParticipant/{id}/{email}")
-    public ResponseEntity<Boolean> removeParticipant(@PathVariable Long id, @PathVariable String email) {
+    @DeleteMapping("/removeParticipant/{trialId}/{userId}")
+    public ResponseEntity<Boolean> removeParticipant(@PathVariable Long trialId, @PathVariable Long userId) {
         try {
-            Boolean removed = clinicalTrialService.removeParticipant(id, email);
+            Boolean removed = clinicalTrialService.removeParticipant(trialId, userId);
             return ResponseEntity.ok(removed);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
