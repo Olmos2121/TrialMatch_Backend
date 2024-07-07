@@ -1,9 +1,11 @@
 package com.example.uade.tpo.utils;
 
 import com.example.uade.tpo.dtos.response.ClinicalTrialResponseDto;
+import com.example.uade.tpo.dtos.response.UserPostulationInfoResponseDto;
 import com.example.uade.tpo.dtos.response.UserResponseDto;
 import com.example.uade.tpo.entity.ClinicalTrial;
 import com.example.uade.tpo.entity.User;
+import com.example.uade.tpo.entity.UserPostulationInfo;
 
 public class Mapper {
 
@@ -33,5 +35,28 @@ public class Mapper {
         clinicalTrialResponseDto.setCandidatosSanos(clinicalTrial.getCandidatosSanos());
         clinicalTrialResponseDto.setFase(clinicalTrial.getFase());
         return clinicalTrialResponseDto;
+    }
+
+    public static UserPostulationInfoResponseDto convertUserPostulationInfoResponseDto(UserPostulationInfo userPostulationInfo){
+        UserPostulationInfoResponseDto userPostulationInfoResponseDto = new UserPostulationInfoResponseDto();
+        userPostulationInfoResponseDto.setId(userPostulationInfo.getId());
+        userPostulationInfoResponseDto.setTrialId(userPostulationInfo.getTrialId());
+        userPostulationInfoResponseDto.setFechaNacimiento(userPostulationInfo.getFechaNacimiento());
+        userPostulationInfoResponseDto.setGenero(userPostulationInfo.getGenero());
+        userPostulationInfoResponseDto.setDireccion(userPostulationInfo.getDireccion());
+        userPostulationInfoResponseDto.setTelefono(userPostulationInfo.getTelefono());
+        userPostulationInfoResponseDto.setHistorialMedico(userPostulationInfo.getHistorialMedico());
+        userPostulationInfoResponseDto.setMedicamentosActuales(userPostulationInfo.getMedicamentosActuales());
+        userPostulationInfoResponseDto.setAlergiasConocidas(userPostulationInfo.getAlergiasConocidas());
+        userPostulationInfoResponseDto.setCirugiasPrevias(userPostulationInfo.getCirugiasPrevias());
+        userPostulationInfoResponseDto.setEnfermedadesCronicas(userPostulationInfo.getEnfermedadesCronicas());
+        userPostulationInfoResponseDto.setNivelEducativo(userPostulationInfo.getNivelEducativo());
+        userPostulationInfoResponseDto.setOcupacion(userPostulationInfo.getOcupacion());
+        userPostulationInfoResponseDto.setHabitosFumar(userPostulationInfo.getHabitosFumar());
+        userPostulationInfoResponseDto.setHabitosAlcohol(userPostulationInfo.getHabitosAlcohol());
+        userPostulationInfoResponseDto.setHabitosEjercicio(userPostulationInfo.getHabitosEjercicio());
+        userPostulationInfoResponseDto.setHabitosAlimenticios(userPostulationInfo.getHabitosAlimenticios());
+        userPostulationInfoResponseDto.setConsentimiento(userPostulationInfo.getConsentimiento());
+        return userPostulationInfoResponseDto;
     }
 }
