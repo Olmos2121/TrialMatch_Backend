@@ -28,7 +28,7 @@ public class ClinicalTrial {
     private String provincia;
     @Column (nullable = false)
     private String fase;
-    @Column (nullable = false)
+    @Column (nullable = false, columnDefinition = "TEXT")
     private String descripcion;
     @Column(nullable = false)
     private String genero;
