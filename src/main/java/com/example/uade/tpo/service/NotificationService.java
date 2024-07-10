@@ -29,9 +29,9 @@ public class NotificationService {
         ClinicalTrial trial = clinicalTrialRepository.findById(trialId).orElseThrow(()
                 -> new OpenApiResourceNotFoundException("Clinical trial not found"));
 
-        String subject = "Postulación Aceptada para Ensayo Clínico";
+        String subject = "Postulación Recibida para Ensayo Clínico";
         String text = "Estimado " + user.getUsername() + ",\n\n"
-                + "Nos complace informarle que su postulación al ensayo clínico " + trial.getName() + " ha sido aceptada.\n\n"
+                + "Nos complace informarle que su postulación al ensayo clínico " + trial.getName() + " ha sido recibida.\n\n"
                 + "A continuacion se comunicaran por este medio para coordinar los detalles de su participación.\n\n"
                 + "Saludos,\n"
                 + "Equipo de TrialMatch";
